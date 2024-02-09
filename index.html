@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>walkingdownwalworthroad</title>
+    <script src="jquery-3.7.1.min.js"></script>
+    <style>
+        .everything {
+            display: grid;
+            grid-template-columns: auto auto;
+            width: 100%;
+            grid-gap: 1px;
+        }
+
+        .grid-item {
+            width: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="everything">
+        <div class="grid-item" id="0"></div>
+        <div class="grid-item" id="1">2</div>
+        <div class="grid-item" id="2">3</div>
+        <div class="grid-item" id="3">4</div>
+    </div>
+    <script>
+        // asynchronously adding youtube iframe api
+        var tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        var firstscripttag = document.getElementsByTagName('script')[0];
+        firstscripttag.parentNode.insertBefore(tag, firstscripttag);
+
+        var players = [];
+        var vids = ['vO7YoluSwTM', '7Kdu-lSnalw']
+        var variables = {
+                    'playsinline': 0,
+                    'controls': 0,
+                    'autoplay': 1,
+                    'disablekb': 1,
+                    'rel': 0,
+                    'mute': 1,
+                    'iv_load_policy' : 3,
+                };
+        var playerevent = {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                };
+        function onYouTubeIframeAPIReady() {
+            console.log("player ready")
+            $('.grid-item').each(function(i) {
+                var num = getRandom(0,vids.length)
+                players.push(new YT.Player(i.toString(), {
+                    videoId: vids[num],
+                    playerVars: variables,
+                    events: playerevent
+                }));
+            });
+        };
+
+        var getRandom = function(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        };
+
+        function onPlayerReady(event) {
+            console.log('ready!')
+            event.target.playVideo();
+        };
+
+        function onPlayerStateChange(event) {
+            console.log(event.data)
+            if (event.data == 0) {
+                console.log('finish');
+                console.log("player with id:" + event.target.id);
+                var num = getRandom(0,vids.length);
+                console.log(vids[num])
+                event.target.loadVideoById(vids[num]);
+            };
+        };
+    </script>
+</body>
+</html>
